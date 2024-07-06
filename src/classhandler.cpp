@@ -8,43 +8,113 @@ ClassHandler::~ClassHandler()
 {
 }
 
-void ClassHandler::ShowMenu(){
 
-}
-void ClassHandler::AddCustomer(){
-    //Agregar un cliente a la base de datos
-}
-void ClassHandler::EditCustomer(){
-    //Editar un cliente en la base de datos
-}
-void ClassHandler::DeleteCustomer(){
-    //Borrar el cliente de la base de datos
-}
-Customer ClassHandler::SearchCustomer(){
-    Customer tCustomer;
+void ClassHandler::AddCustomer(Customer &tCustomer)
+{   
+    query = R"(
+    INSERT INTO Customers (ID, Name, Lastname, EmailAddress)
+    VALUES (')" + std::to_string(tCustomer.getId()) + R"(', ')" 
+    + tCustomer.getName() + R"(', ')" 
+    + tCustomer.getLastName() + R"(', ')" 
+    + tCustomer.getEmailAddress() + R"(', ')";
 
-    //Pedir campo al usuario
+    Database->prepareQuery(query);
+    Database->execute();
+}
+void ClassHandler::EditCustomer(Customer &tCustomer)
+{
+    query = R"(
+        UPDATE Customers
+        SET Name = ')" + tCustomer.getName() + R"(',
+            Lastname = ')" + tCustomer.getLastName() + R"(',
+            EmailAddress = ')" + tCustomer.getEmailAddress() + R"('
+        WHERE ID = )" + std::to_string(tCustomer.getId()) + R"();
+    )";
 
-    //Realizar la busqueda en la base de datos
+    Database->prepareQuery(query);
+    Database->execute();
+}
+void ClassHandler::DeleteCustomer(Customer &tCustomer)
+{
+    query = R"(
+        DELETE FROM Customers
+        WHERE ID = )" + std::to_string(tCustomer.getId()) + R"();
+    )";
+
+    Database->prepareQuery(query);
+    Database->execute();
+}
+Customer ClassHandler::SearchCustomer(string row, string value)
+{
+    query = R"(
+        SELECT * FROM Customers
+        WHERE )" + row + " = '" + value + R"(';
+    )";
+    Database->prepareQuery(query);
+    Database->execute();
+
+    //Asignar los valores del registro, a los atributos de un objeto.
+
 
     return tCustomer;
 }
-
-void ClassHandler::AddGame(){
-    //Agregar un juego a la base de datos
+void ClassHandler::ListCustomers()
+{
+    query = "SELECT * FROM Customers";
+    Database->prepareQuery(query);
+    Database->execute();
 }
-void ClassHandler::EditGame(){
-    //Editar un juego en la base de datos
-}
-void ClassHandler::DeleteGame(){
-    //Borrar un juego de la base de datos
-}
-Game ClassHandler::SearchGame(){
-    Game tGame;
 
-    //Pedir campo al usuario
+void ClassHandler::AddGame(Game &tGame)
+{
+    query = R"(
+        INSERT INTO Games (ID, Name)
+        VALUES (')" + std::to_string(tGame.getId()) 
+        + R"(', ')" + tGame.getName() + R"(');
+    )";
 
-    //Realizar la busqueda en la base de datos
+    Database->prepareQuery(query);
+    Database->execute();
+}
+void ClassHandler::EditGame(Game &tGame)
+{
+    query =  R"(
+        UPDATE Games
+        SET Name = ')" + tGame.getName() + R"('
+        WHERE ID = )" + std::to_string(tGame.getId()) + R"();
+    )";
+
+    Database->prepareQuery(query);
+    Database->execute();
+}
+void ClassHandler::DeleteGame(Game &tGame)
+{
+    query = R"(
+        DELETE FROM Games
+        WHERE ID = )" + std::to_string(tGame.getId()) + R"();
+    )";
+
+    Database->prepareQuery(query);
+    Database->execute();
+}
+Game ClassHandler::SearchGame(string row, string value)
+{
+    query = R"(
+        SELECT * FROM Games
+        WHERE )" + row + " = '" + value + R"(';
+    )";
+    Database->prepareQuery(query);
+    Database->execute();
+
+    //Asignar los valores del registro, a los atributos de un objeto.
 
     return tGame;
+}
+void ClassHandler::ListGames()
+{
+    query = "SELECT * FROM Games";
+    Database->prepareQuery(query);
+    Database->execute();
+    
+    //Listar los registros de la BD y mostrarlos por consola.
 }

@@ -1,5 +1,3 @@
-'Encontre este formato para hacer los diagramas de secuencia, y me parecio mas facil de usar que el DIA
-
 @startuml AddGameSecuence
 actor User
 

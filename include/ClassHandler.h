@@ -7,24 +7,27 @@ class ClassHandler
 {
 private:
 
-    SqliteDatabaseHandler Database;
+    SqliteDatabaseHandler *Database;
     Customer tCustomer;
     Game tGame;
+    string query;
 
 public:
 
     void ShowMenu();
     void AddCustomer(Customer &tCustomer);
-    void EditCustomer();
-    void DeleteCustomer();
-    Customer SearchCustomer();
+    void EditCustomer(Customer &tCustomer);
+    void DeleteCustomer(Customer &tCustomer);
+    Customer SearchCustomer(string row, string value);
     void ListCustomers();
 
 
-    void AddGame();
-    void EditGame();
-    void DeleteGame();
-    Game SearchGame();
+    void AddGame(Game &tGame);
+    void EditGame(Game &tGame);
+    void DeleteGame(Game &tGame);
+    Game SearchGame(string row, string value);
+    void ListGames();
+    
 
     ClassHandler();
     ~ClassHandler();
