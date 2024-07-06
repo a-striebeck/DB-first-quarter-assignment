@@ -24,15 +24,29 @@ void ClassHandler::AddCustomer(Customer &tCustomer)
 void ClassHandler::EditCustomer(Customer &tCustomer)
 {
     query = R"(
-        UPDATE Customers
-        SET Name = ')" + tCustomer.getName() + R"(',
-            Lastname = ')" + tCustomer.getLastName() + R"(',
-            EmailAddress = ')" + tCustomer.getEmailAddress() + R"('
-        WHERE ID = )" + std::to_string(tCustomer.getId()) + R"();
+        INSERT INTO Customers (ID, Name, Lastname, EmailAddress)
+        SELECT ?, ?, ?, ? FROM (SELECT ?, ?, ?, ?) AS tmp
+        WHERE NOT EXISTS (
+            SELECT EmailAddress FROM Customers WHERE EmailAddress = ?
+        ) LIMIT 1;
     )";
 
+    // Preparar la consulta en la base de datos
     Database->prepareQuery(query);
+
+    // Enlazar los parámetros uno por uno en la consulta preparada
+    Database->addParameter(1, std::to_string(tCustomer.getId()));     
+    Database->addParameter(2, tCustomer.getName());                   
+    Database->addParameter(3, tCustomer.getLastName());
+    Database->addParameter(4, tCustomer.getEmailAddress());
+    Database->addParameter(5, std::to_string(tCustomer.getId()));     
+    Database->addParameter(6, tCustomer.getName());                   
+    Database->addParameter(7, tCustomer.getLastName());
+    Database->addParameter(8, tCustomer.getEmailAddress());
+    Database->addParameter(9, tCustomer.getEmailAddress());           // Para la subconsulta EXISTS
+
     Database->execute();
+
 }
 void ClassHandler::DeleteCustomer(Customer &tCustomer)
 {
