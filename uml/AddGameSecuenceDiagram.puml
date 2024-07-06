@@ -1,0 +1,16 @@
+'Encontre este formato para hacer los diagramas de secuencia, y me parecio mas facil de usar que el DIA
+
+@startuml AddGameSecuence
+actor User
+
+User -> ClassHandler: AddGame(tGame)
+activate ClassHandler
+
+ClassHandler -> SqliteDatabaseHandler: prepareQuery("INSERT INTO Game ...")
+activate SqliteDatabaseHandler
+
+ClassHandler -> SqliteDatabaseHandler: execute()
+deactivate SqliteDatabaseHandler
+
+deactivate ClassHandler
+@enduml
