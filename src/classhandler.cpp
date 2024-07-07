@@ -58,11 +58,11 @@ void ClassHandler::DeleteCustomer(Customer &tCustomer)
     Database->prepareQuery(query);
     Database->execute();
 }
-Customer ClassHandler::SearchCustomer(string row, string value)
+Customer ClassHandler::SearchCustomer(string value)
 {
     query = R"(
-        SELECT * FROM Customers
-        WHERE )" + row + " = '" + value + R"(';
+    SELECT * FROM Customers
+    WHERE )" + value + R"(';
     )";
     Database->prepareQuery(query);
     Database->execute();

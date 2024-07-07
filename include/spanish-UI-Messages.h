@@ -6,7 +6,7 @@ using namespace std;
     Menu message
 */
 
-std::string Menu = R"(
+std::string menuMessage = R"(
             Gestion de juegos
 
 1.  Ingresar nuevo cliente.
@@ -30,6 +30,8 @@ S. Salir.
     Process Operation messages
 */
 std::string operationAsk = "Ingrese la operación: ";
+std::string exitMessage = "Que tenga un buen día";
+std::string invalidOption = "Opción invalida, por favor ingrese de nuevo.";
 /*
     Repetitive messages:
 */

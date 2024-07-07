@@ -18,7 +18,7 @@ public:
     void AddCustomer(Customer &tCustomer);
     void EditCustomer(Customer &tCustomer);
     void DeleteCustomer(Customer &tCustomer);
-    Customer SearchCustomer(string row, string value);
+    Customer SearchCustomer(string value);
     void ListCustomers();
 
 
