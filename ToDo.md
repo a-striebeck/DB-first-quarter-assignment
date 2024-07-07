@@ -1,2 +1,4 @@
 - **Display corresponding associations**.
 - **The table that relates users to games must be added: by user name and email.**
+- **ListCustomer and List Games**
+- **Update Class Diagram**

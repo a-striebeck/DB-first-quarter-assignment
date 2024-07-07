@@ -43,7 +43,7 @@ void ClassHandler::EditCustomer(Customer &tCustomer)
     Database->addParameter(6, tCustomer.getName());                   
     Database->addParameter(7, tCustomer.getLastName());
     Database->addParameter(8, tCustomer.getEmailAddress());
-    Database->addParameter(9, tCustomer.getEmailAddress());           // Para la subconsulta EXISTS
+    Database->addParameter(9, tCustomer.getEmailAddress());           
 
     Database->execute();
 
@@ -111,11 +111,11 @@ void ClassHandler::DeleteGame(Game &tGame)
     Database->prepareQuery(query);
     Database->execute();
 }
-Game ClassHandler::SearchGame(string row, string value)
+Game ClassHandler::SearchGame(string value)
 {
     query = R"(
         SELECT * FROM Games
-        WHERE )" + row + " = '" + value + R"(';
+        WHERE )" + value + R"(';
     )";
     Database->prepareQuery(query);
     Database->execute();

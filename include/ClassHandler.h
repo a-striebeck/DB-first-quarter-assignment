@@ -25,7 +25,7 @@ public:
     void AddGame(Game &tGame);
     void EditGame(Game &tGame);
     void DeleteGame(Game &tGame);
-    Game SearchGame(string row, string value);
+    Game SearchGame(string value);
     void ListGames();
     
 

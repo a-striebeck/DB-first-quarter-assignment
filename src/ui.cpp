@@ -25,40 +25,53 @@ void ui::AddCustomer()
 {   
 
     std::string input;
-    Customer tCustomer;
+    Customer* tCustomer = new Customer();
     cout << addName;
     cin >> input;
-    tCustomer.setName(input);
+    tCustomer->setName(input);
     cout << addLastName;
     cin >> input;
-    tCustomer.setLastName(input);
+    tCustomer->setLastName(input);
     cout << addEmail;
     cin >> input;
-    tCustomer.setEmailAddress(input);
-    OpManager.AddCustomer(tCustomer);
+    tCustomer->setEmailAddress(input);
+    OpManager.AddCustomer(*tCustomer);
+
+    delete tCustomer;
 
 }
 void ui::EditCustomer()
 {
-    Customer tCustomer = SearchCustomer();
+    Customer* tCustomer = new Customer();
+    
+    *tCustomer = SearchCustomer();
 
     std::string input;
     cout << addName;
     cin >> input;
-    tCustomer.setName(input);
+    tCustomer->setName(input);
     cout << addLastName;
     cin >> input;
-    tCustomer.setLastName(input);
+    tCustomer->setLastName(input);
     cout << addEmail;
     cin >> input;
-    tCustomer.setEmailAddress(input);
+    tCustomer->setEmailAddress(input);
 
-    OpManager.EditCustomer(tCustomer);
+    OpManager.EditCustomer(*tCustomer);
+
+    delete tCustomer;
 
 }
 void ui::DeleteCustomer()
 {
-    Customer tCustomer = SearchCustomer();
+    Customer* tCustomer = new Customer();
+    
+    *tCustomer = SearchCustomer();
+    cout << delConfirmation + tCustomer->getName() + " " + tCustomer->getLastName() << "? ";
+
+    OpManager.DeleteCustomer(*tCustomer);
+    
+    delete tCustomer;
 }
 
 void ui::ListCustomers()
@@ -78,17 +91,40 @@ Customer ui::SearchCustomer()
 
 void ui::AddGame()
 {
+    std::string input;
+    Game* tGame = new Game();
 
+    cout << addGameName;
+    cin >> input;
+    tGame->setName(input);
+    OpManager.AddGame(*tGame);
+
+    delete tGame;
 }
 
 void ui::EditGame()
 {
+    Game* tGame = new Game();
+    
+    *tGame = SearchGame();
 
+    std::string input;
+    cout << addGameName;
+    cin >> input;
+    tGame->setName(input);
+
+    OpManager.EditGame(*tGame);
+
+    delete tGame;
 }
 
 void ui::DeleteGame()
 {
-
+    Game *tGame = new Game();
+    
+    *tGame = SearchGame();
+    cout << delConfirmation + tGame->getName() << "? ";
+    OpManager.DeleteGame(*tGame);
 }
 
 void ui::ListGames()
@@ -99,8 +135,11 @@ void ui::ListGames()
 Game ui::SearchGame()
 
 {
-
-    }
+    string value = "";
+    cout << gameIDmessage;
+    cin >> value;
+    Game tGame = OpManager.SearchGame(value);
+}
 void ui::showMenu()
 {
     std::cout << menuMessage;

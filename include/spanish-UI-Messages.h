@@ -69,7 +69,7 @@ std::string CxEmail = "Email: ";
     Delete Customer messages
 */
 
-std::string delConfirmation = "Desea eliminar el cliente: ";
+std::string delConfirmation = "¿Desea eliminar: ";
 
 /*
     Add Game messages
@@ -79,7 +79,7 @@ string addGameName = "Ingrese el nombre del juego: ";
 /*
     Message to ask Game ID
 */
-string GameIDmessage = "Ingrese ID del juego: ";
+string gameIDmessage = "Ingrese ID del juego: ";
 
 /*
     Edit Game messages
