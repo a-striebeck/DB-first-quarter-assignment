@@ -5,18 +5,18 @@ ui::ui(SqliteDatabaseHandler &dbHandler)
 
 {   
     OpManager = new ClassHandler(dbHandler);
-    Operations['1'] = [this]() { AddCustomer(); };
-    Operations['2'] = [this]() { EditCustomer(); };
-    Operations['3'] = [this]() { DeleteCustomer(); };
-    Operations['4'] = [this]() { ListCustomers(); };
-    Operations['5'] = [this]() { SearchCustomer(); };
-    Operations['6'] = [this]() { AddGame(); };
-    Operations['7'] = [this]() { EditGame(); };
-    Operations['8'] = [this]() { DeleteGame(); };
-    Operations['9'] = [this]() { ListGames(); };
-    Operations['10'] = [this]() { SearchGame(); };
-    Operations['A'] = [this]() { showGamesPerCustomer(); };
-    Operations['B'] = [this]() { showCustomersPerGame(); };
+    Operations["1"] = [this]() { AddCustomer(); };
+    Operations["2"] = [this]() { EditCustomer(); };
+    Operations["3"] = [this]() { DeleteCustomer(); };
+    Operations["4"] = [this]() { ListCustomers(); };
+    Operations["5"] = [this]() { SearchCustomer(); };
+    Operations["6"] = [this]() { AddGame(); };
+    Operations["7"] = [this]() { EditGame(); };
+    Operations["8"] = [this]() { DeleteGame(); };
+    Operations["9"] = [this]() { ListGames(); };
+    Operations["10"] = [this]() { SearchGame(); };
+    Operations["A"] = [this]() { showGamesPerCustomer(); };
+    Operations["B"] = [this]() { showCustomersPerGame(); };
 }
 
 ui::~ui()
@@ -145,6 +145,8 @@ Game ui::SearchGame()
     cout << gameIDmessage;
     cin >> value;
     Game tGame = OpManager->SearchGame(value);
+
+    return tGame;
 }
 void ui::showMenu()
 {
@@ -153,10 +155,10 @@ void ui::showMenu()
 
 void ui::processOperation()
 {
-    char op;
+    std::string op;
     std::cout << operationAsk;
     std::cin >> op;
-    if (op == 'S') {
+    if (op == "S") {
             cout << exitMessage;
         } else if (Operations.find(op) != Operations.end()) {
             Operations[op]();

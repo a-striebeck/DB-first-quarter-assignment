@@ -12,7 +12,7 @@ class ui
 {
 private:
 
-    std::map<char, std::function<void()>> Operations;
+    std::map<std::string, std::function<void()>> Operations;
     ClassHandler *OpManager;
 
     

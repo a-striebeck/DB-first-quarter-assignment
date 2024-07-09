@@ -1,101 +1,29 @@
-#include <iostream>
+#ifndef SPANISH_UI_MESSAGES_H
+#define SPANISH_UI_MESSAGES_H
 
-using namespace std;
+#include <string>
 
-/*
-    Menu message
-*/
+extern std::string menuMessage;
+extern std::string operationAsk;
+extern std::string exitMessage;
+extern std::string invalidOption;
+extern std::string Confirmation;
+extern std::string EmpyTable;
+extern std::string addName;
+extern std::string addLastName;
+extern std::string addEmail;
+extern std::string IDmessage;
+extern std::string EditConfirmation1;
+extern std::string searchMessage;
+extern std::string CxName;
+extern std::string CxLastName;
+extern std::string CxEmail;
+extern std::string delConfirmation;
+extern std::string addGameName;
+extern std::string gameIDmessage;
+extern std::string editGameConfirmation;
+extern std::string searchGameMessage;
+extern std::string gameNameMessage;
+extern std::string delGameConfirmation;
 
-std::string menuMessage = R"(
-            Gestion de juegos
-
-1.  Ingresar nuevo cliente.
-2.  Editar cliente.
-3.  Eliminar cliente.
-4.  Listar clientes.
-5.  Buscar cliente.
-
-6.  Ingresar juego.
-7.  Editar juego.
-8.  Eliminar juego.
-9.  Listar juegos.
-10. Buscar juego.
-
-A. Mostrar juegos por cliente.
-B. Mostrar clientes por juegos.
-S. Salir.
-)";
-
-/*
-    Process Operation messages
-*/
-std::string operationAsk = "Ingrese la operación: ";
-std::string exitMessage = "Que tenga un buen día";
-std::string invalidOption = "Opción invalida, por favor ingrese de nuevo.";
-/*
-    Repetitive messages:
-*/
-
-    std::string Confirmation = "Ingrese S para confirmar, u ingrese cualquier otro caracter para cancelar.";
-    std::string EmpyTable = "No hay datos disponibles.";
-/*
-    Add Customer messages
-*/
-
-std::string addName = "Ingrese el nombre: ";
-std::string addLastName = "Ingrese apellido: ";
-std::string addEmail = "Ingrese correo electronico: ";
-
-/*
-    Message to ask ID
-*/
-
-std::string IDmessage = "Ingrese ID del cliente: ";
-
-/*
-    Edit Customer messages
-*/
-std::string EditConfirmation1 = "Desea modificar el cliente: ";
-
-/*
-    Search Customer messages
-*/
-
-std::string searchMessage = "Datos del cliente";
-std::string CxName = "Nombre: ";
-std::string CxLastName = "Apellido: ";
-std::string CxEmail = "Email: ";
-
-/*
-    Delete Customer messages
-*/
-
-std::string delConfirmation = "¿Desea eliminar: ";
-
-/*
-    Add Game messages
-*/
-string addGameName = "Ingrese el nombre del juego: ";
-
-/*
-    Message to ask Game ID
-*/
-string gameIDmessage = "Ingrese ID del juego: ";
-
-/*
-    Edit Game messages
-*/
-string editGameConfirmation = "Desea modificar el juego: ";
-
-/*
-    Search Game messages
-*/
-string searchGameMessage = "Datos del juego";
-string gameNameMessage = "Nombre del juego: ";
-
-/*
-    Delete Game messages
-*/
-string delGameConfirmation = "Desea eliminar el juego: ";
-
-
+#endif // SPANISH_UI_MESSAGES_H
