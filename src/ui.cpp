@@ -1,24 +1,27 @@
-#include <ui.H>
-#include <map>
+#include <ui.h>
 
-ui::ui(/* args */)
-{
-        Operations['1'] = [this]() { AddCustomer(); };
-        Operations['2'] = [this]() { EditCustomer(); };
-        Operations['3'] = [this]() { DeleteCustomer(); };
-        Operations['4'] = [this]() { ListCustomers(); };
-        Operations['5'] = [this]() { SearchCustomer(); };
-        Operations['6'] = [this]() { AddGame(); };
-        Operations['7'] = [this]() { EditGame(); };
-        Operations['8'] = [this]() { DeleteGame(); };
-        Operations['9'] = [this]() { ListGames(); };
-        Operations['10'] = [this]() { SearchGame(); };
-        Operations['A'] = [this]() { showGamesPerCustomer(); };
-        Operations['B'] = [this]() { showCustomersPerGame(); };
+
+ui::ui(SqliteDatabaseHandler &dbHandler)
+
+{   
+    OpManager = new ClassHandler(dbHandler);
+    Operations['1'] = [this]() { AddCustomer(); };
+    Operations['2'] = [this]() { EditCustomer(); };
+    Operations['3'] = [this]() { DeleteCustomer(); };
+    Operations['4'] = [this]() { ListCustomers(); };
+    Operations['5'] = [this]() { SearchCustomer(); };
+    Operations['6'] = [this]() { AddGame(); };
+    Operations['7'] = [this]() { EditGame(); };
+    Operations['8'] = [this]() { DeleteGame(); };
+    Operations['9'] = [this]() { ListGames(); };
+    Operations['10'] = [this]() { SearchGame(); };
+    Operations['A'] = [this]() { showGamesPerCustomer(); };
+    Operations['B'] = [this]() { showCustomersPerGame(); };
 }
 
 ui::~ui()
 {
+    delete OpManager;
 }
 
 void ui::AddCustomer()
@@ -35,7 +38,7 @@ void ui::AddCustomer()
     cout << addEmail;
     cin >> input;
     tCustomer->setEmailAddress(input);
-    OpManager.AddCustomer(*tCustomer);
+    OpManager->AddCustomer(*tCustomer);
 
     delete tCustomer;
 
@@ -57,7 +60,7 @@ void ui::EditCustomer()
     cin >> input;
     tCustomer->setEmailAddress(input);
 
-    OpManager.EditCustomer(*tCustomer);
+    OpManager->EditCustomer(*tCustomer);
 
     delete tCustomer;
 
@@ -69,14 +72,15 @@ void ui::DeleteCustomer()
     *tCustomer = SearchCustomer();
     cout << delConfirmation + tCustomer->getName() + " " + tCustomer->getLastName() << "? ";
 
-    OpManager.DeleteCustomer(*tCustomer);
+    OpManager->DeleteCustomer(*tCustomer);
     
     delete tCustomer;
 }
 
 void ui::ListCustomers()
 {
-    
+    Table customers = OpManager->ListCustomers();
+    printTable(customers);
 }
 
 Customer ui::SearchCustomer()
@@ -84,7 +88,7 @@ Customer ui::SearchCustomer()
     string value = "";
     cout << IDmessage;
     cin >> value;
-    Customer tCustomer = OpManager.SearchCustomer(value);
+    Customer tCustomer = OpManager->SearchCustomer(value);
 
     return tCustomer;
 }
@@ -97,7 +101,7 @@ void ui::AddGame()
     cout << addGameName;
     cin >> input;
     tGame->setName(input);
-    OpManager.AddGame(*tGame);
+    OpManager->AddGame(*tGame);
 
     delete tGame;
 }
@@ -113,7 +117,7 @@ void ui::EditGame()
     cin >> input;
     tGame->setName(input);
 
-    OpManager.EditGame(*tGame);
+    OpManager->EditGame(*tGame);
 
     delete tGame;
 }
@@ -124,13 +128,15 @@ void ui::DeleteGame()
     
     *tGame = SearchGame();
     cout << delConfirmation + tGame->getName() << "? ";
-    OpManager.DeleteGame(*tGame);
+    OpManager->DeleteGame(*tGame);
 }
 
 void ui::ListGames()
 {
-
+    Table games = OpManager->ListGames();
+    printTable(games);    
 }
+
 
 Game ui::SearchGame()
 
@@ -138,7 +144,7 @@ Game ui::SearchGame()
     string value = "";
     cout << gameIDmessage;
     cin >> value;
-    Game tGame = OpManager.SearchGame(value);
+    Game tGame = OpManager->SearchGame(value);
 }
 void ui::showMenu()
 {
@@ -161,10 +167,39 @@ void ui::processOperation()
 
 void ui::showGamesPerCustomer()
 {
-
+    Table JoinQuery = OpManager->JoinQuerys(true);
+    printTable(JoinQuery);
 }
 
 void ui::showCustomersPerGame()
 {
+    Table JoinQuery = OpManager->JoinQuerys(false);
+}
 
+void ui::printTable(const Table& table) {
+    if (table.empty()) {
+        std::cout << EmpyTable << std::endl;
+        return;
+    }
+
+    // Imprimir encabezados
+    const Row& firstRow = table[0];
+    for (const auto& column : firstRow) {
+        std::cout << std::setw(20) << std::left << column.first;
+    }
+    std::cout << std::endl;
+
+    // Imprimir separador
+    for (size_t i = 0; i < firstRow.size(); ++i) {
+        std::cout << std::setw(20) << std::left << "--------------------";
+    }
+    std::cout << std::endl;
+
+    // Imprimir filas
+    for (const auto& row : table) {
+        for (const auto& column : row) {
+            std::cout << std::setw(20) << std::left << column.second;
+        }
+        std::cout << std::endl;
+    }
 }

@@ -1,6 +1,10 @@
-#include <Game.h>
-#include <Customer.h>
+#ifndef CLASSHANDLER_H
+#define CLASSHANDLER_H
+
 #include <SqliteDatabaseHandler.h>
+#include <Customer.h>
+#include <Game.h>
+
 
 
 class ClassHandler
@@ -14,23 +18,22 @@ private:
 
 public:
 
-    void ShowMenu();
     void AddCustomer(Customer &tCustomer);
     void EditCustomer(Customer &tCustomer);
     void DeleteCustomer(Customer &tCustomer);
     Customer SearchCustomer(string value);
-    void ListCustomers();
+    Table ListCustomers();
 
 
     void AddGame(Game &tGame);
     void EditGame(Game &tGame);
     void DeleteGame(Game &tGame);
     Game SearchGame(string value);
-    void ListGames();
+    Table ListGames();
     
+    Table JoinQuerys(bool selection);
 
-    ClassHandler();
+    ClassHandler(SqliteDatabaseHandler &db);
     ~ClassHandler();
 };
-
-
+#endif

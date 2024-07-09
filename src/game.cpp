@@ -26,3 +26,4 @@ void Game::setName(const std::string &name)
 {
     Name = name;
 }
+

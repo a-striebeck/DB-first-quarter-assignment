@@ -37,6 +37,7 @@ std::string invalidOption = "Opción invalida, por favor ingrese de nuevo.";
 */
 
     std::string Confirmation = "Ingrese S para confirmar, u ingrese cualquier otro caracter para cancelar.";
+    std::string EmpyTable = "No hay datos disponibles.";
 /*
     Add Customer messages
 */
@@ -96,6 +97,5 @@ string gameNameMessage = "Nombre del juego: ";
     Delete Game messages
 */
 string delGameConfirmation = "Desea eliminar el juego: ";
-
 
 

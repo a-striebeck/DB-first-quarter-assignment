@@ -1,9 +1,41 @@
 #include <classhandler.h>
 
-ClassHandler::ClassHandler(/* args */)
+ClassHandler::ClassHandler(SqliteDatabaseHandler &db) : Database(&db)
 {
-}
+    Database->setConfigFile(".build\\configuration.ini");
 
+    query = R"(
+        CREATE TABLE IF NOT EXISTS Customers (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name TEXT NOT NULL,
+            LastName TEXT NOT NULL,
+            EmailAddress TEXT NOT NULL
+        );
+    )";
+    Database->prepareQuery(query);
+    Database->execute();
+
+    query = R"(
+        CREATE TABLE IF NOT EXISTS Games (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name TEXT NOT NULL
+        );
+    )";
+    Database->prepareQuery(query);
+    Database->execute();
+
+    query = R"(
+        CREATE TABLE IF NOT EXISTS Purchases (
+            CustomerID INTEGER,
+            GameID INTEGER,
+            FOREIGN KEY(CustomerID) REFERENCES Customers(ID),
+            FOREIGN KEY(GameID) REFERENCES Games(ID)
+        );
+    )";
+    Database->prepareQuery(query);
+    Database->execute();
+
+}
 ClassHandler::~ClassHandler()
 {
 }
@@ -60,23 +92,24 @@ void ClassHandler::DeleteCustomer(Customer &tCustomer)
 }
 Customer ClassHandler::SearchCustomer(string value)
 {
-    query = R"(
-    SELECT * FROM Customers
-    WHERE )" + value + R"(';
-    )";
+    query = "SELECT ID, Name, LastName, EmailAddress FROM Customers WHERE Name = '" + value + "';";
     Database->prepareQuery(query);
     Database->execute();
+    Row row = Database->fetch();
 
-    //Asignar los valores del registro, a los atributos de un objeto.
-
-
+    tCustomer.setId(std::stoi(row["ID"]));
+    tCustomer.setName(row["Name"]);
+    tCustomer.setLastName(row["LastName"]);
+    tCustomer.setEmailAddress(row["EmailAddress"]);
+    
     return tCustomer;
 }
-void ClassHandler::ListCustomers()
+Table ClassHandler::ListCustomers()
 {
     query = "SELECT * FROM Customers";
     Database->prepareQuery(query);
     Database->execute();
+    return Database->fetchAll();
 }
 
 void ClassHandler::AddGame(Game &tGame)
@@ -113,22 +146,44 @@ void ClassHandler::DeleteGame(Game &tGame)
 }
 Game ClassHandler::SearchGame(string value)
 {
-    query = R"(
-        SELECT * FROM Games
-        WHERE )" + value + R"(';
-    )";
+query = "SELECT id, nombre FROM Games WHERE nombre = '" + value + "';";
+
     Database->prepareQuery(query);
     Database->execute();
+    Row row = Database->fetch();
 
-    //Asignar los valores del registro, a los atributos de un objeto.
+    //Asigno los valores del registro, a los atributos de tGame.
+    tGame.setId(std::stoi(row["id"]));
+    tGame.setName(row["nombre"]);
 
     return tGame;
 }
-void ClassHandler::ListGames()
+Table ClassHandler::ListGames()
 {
     query = "SELECT * FROM Games";
     Database->prepareQuery(query);
     Database->execute();
-    
-    //Listar los registros de la BD y mostrarlos por consola.
+    return Database->fetchAll();
+}
+
+Table ClassHandler::JoinQuerys(bool selection) {
+    if (selection) {
+        query = R"(
+            SELECT Customers.Name AS CustomerName, Games.Name AS GameName
+            FROM Customers
+            INNER JOIN Purchases ON Customers.ID = Purchases.CustomerID
+            INNER JOIN Games ON Purchases.GameID = Games.ID;
+        )";
+    } else {
+        query = R"(
+            SELECT Games.Name AS GameName, Customers.Name AS CustomerName
+            FROM Games
+            INNER JOIN Purchases ON Games.ID = Purchases.GameID
+            INNER JOIN Customers ON Purchases.CustomerID = Customers.ID;
+        )";
+    }
+
+    Database->prepareQuery(query);
+    Database->execute();
+    return Database->fetchAll();
 }

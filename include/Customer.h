@@ -1,3 +1,6 @@
+#ifndef CUSTOMER_H
+#define CUSTOMER_H
+
 #include <iostream>
 
 class Customer
@@ -23,3 +26,5 @@ public:
     void setLastName(const std::string &lastName);
     void setEmailAddress(const std::string &address);
 };
+
+#endif

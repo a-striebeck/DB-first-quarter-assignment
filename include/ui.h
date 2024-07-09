@@ -1,13 +1,19 @@
-#include <iostream>
-#include <ClassHandler.h>
-#include <spanish-UI-Messages.h>
+#ifndef UI_H
+#define UI_H
 
+#include <iostream>
+#include <map>
+#include <iomanip>
+#include <ClassHandler.h>
+#include "Customer.h"
+#include "Game.h"
+#include <spanish-UI-Messages.h>
 class ui
 {
 private:
 
     std::map<char, std::function<void()>> Operations;
-    ClassHandler OpManager;
+    ClassHandler *OpManager;
 
     
     void AddCustomer();
@@ -20,13 +26,16 @@ private:
     void DeleteGame();
     void ListGames();
     Game SearchGame();
+    void printTable(const Table& table);
 
 
 public:
-    ui();
+    ui(SqliteDatabaseHandler &dbHandler);
     ~ui();
     void showMenu();
     void processOperation();
     void showGamesPerCustomer();
     void showCustomersPerGame();
 };
+
+#endif // UI_H
