@@ -1,14 +1,26 @@
-@startuml AddGameSecuence
-actor User
+@startuml AddGameSequence
 
-User -> ClassHandler: AddGame(tGame)
+actor User
+participant ui
+participant ClassHandler
+participant SqliteDatabaseHandler
+
+User -> ui: AddGame()
+activate ui
+
+ui -> ClassHandler: AddGame(tGame)
 activate ClassHandler
 
-ClassHandler -> SqliteDatabaseHandler: prepareQuery("INSERT INTO Game ...")
+ClassHandler -> SqliteDatabaseHandler: prepareQuery("INSERT INTO Games (ID, Name) VALUES (?, ?);")
 activate SqliteDatabaseHandler
+
+ClassHandler -> SqliteDatabaseHandler: addParameter(1, std::to_string(tGame.getId()))
+ClassHandler -> SqliteDatabaseHandler: addParameter(2, tGame.getName())
 
 ClassHandler -> SqliteDatabaseHandler: execute()
 deactivate SqliteDatabaseHandler
 
 deactivate ClassHandler
+deactivate ui
+
 @enduml

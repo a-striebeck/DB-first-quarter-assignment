@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-//I've added the <memory> library because the shared_pointer was showing a compiling error.
+//I've added the <memory> library because the shared_pointer was returning a compiling error.
 #include <memory>
 #include <unordered_map>
 #include <sqlite3.h>
