@@ -44,13 +44,16 @@ ClassHandler::~ClassHandler()
 void ClassHandler::AddCustomer(Customer &tCustomer)
 {   
     query = R"(
-    INSERT INTO Customers (ID, Name, Lastname, EmailAddress)
-    VALUES (')" + std::to_string(tCustomer.getId()) + R"(', ')" 
-    + tCustomer.getName() + R"(', ')" 
-    + tCustomer.getLastName() + R"(', ')" 
-    + tCustomer.getEmailAddress() + R"(', ')";
+        INSERT INTO Customers (ID, Name, Lastname, EmailAddress)
+        VALUES (?, ?, ?, ?);
+    )";
 
     Database->prepareQuery(query);
+    Database->addParameter(1, std::to_string(tCustomer.getId()));
+    Database->addParameter(2, tCustomer.getName());
+    Database->addParameter(3, tCustomer.getLastName());
+    Database->addParameter(4, tCustomer.getEmailAddress());
+
     Database->execute();
 }
 void ClassHandler::EditCustomer(Customer &tCustomer)
@@ -84,19 +87,25 @@ void ClassHandler::DeleteCustomer(Customer &tCustomer)
 {
     query = R"(
         DELETE FROM Customers
-        WHERE ID = )" + std::to_string(tCustomer.getId()) + R"();
+        WHERE ID = ?;
     )";
 
     Database->prepareQuery(query);
+    Database->addParameter(1, std::to_string(tCustomer.getId()));
     Database->execute();
 }
 Customer ClassHandler::SearchCustomer(string value)
 {
-    query = "SELECT ID, Name, LastName, EmailAddress FROM Customers WHERE Name = '" + value + "';";
+    query = R"(
+        SELECT ID, Name, LastName, EmailAddress FROM Customers WHERE Name = ?;
+    )";
+
     Database->prepareQuery(query);
+    Database->addParameter(1, value);
     Database->execute();
     Row row = Database->fetch();
 
+    Customer tCustomer;  // Asegurarse de inicializar tCustomer
     tCustomer.setId(std::stoi(row["ID"]));
     tCustomer.setName(row["Name"]);
     tCustomer.setLastName(row["LastName"]);
@@ -116,45 +125,54 @@ void ClassHandler::AddGame(Game &tGame)
 {
     query = R"(
         INSERT INTO Games (ID, Name)
-        VALUES (')" + std::to_string(tGame.getId()) 
-        + R"(', ')" + tGame.getName() + R"(');
+        VALUES (?, ?);
     )";
 
     Database->prepareQuery(query);
+    Database->addParameter(1, std::to_string(tGame.getId()));
+    Database->addParameter(2, tGame.getName());
+
     Database->execute();
 }
 void ClassHandler::EditGame(Game &tGame)
 {
-    query =  R"(
+    query = R"(
         UPDATE Games
-        SET Name = ')" + tGame.getName() + R"('
-        WHERE ID = )" + std::to_string(tGame.getId()) + R"();
+        SET Name = ?
+        WHERE ID = ?;
     )";
 
     Database->prepareQuery(query);
+    Database->addParameter(1, tGame.getName());
+    Database->addParameter(2, std::to_string(tGame.getId()));
+
     Database->execute();
 }
 void ClassHandler::DeleteGame(Game &tGame)
 {
     query = R"(
         DELETE FROM Games
-        WHERE ID = )" + std::to_string(tGame.getId()) + R"();
+        WHERE ID = ?;
     )";
 
     Database->prepareQuery(query);
+    Database->addParameter(1, std::to_string(tGame.getId()));
     Database->execute();
 }
 Game ClassHandler::SearchGame(string value)
 {
-query = "SELECT id, nombre FROM Games WHERE nombre = '" + value + "';";
+    query = R"(
+        SELECT ID, Name FROM Games WHERE Name = ?;
+    )";
 
     Database->prepareQuery(query);
+    Database->addParameter(1, value);
     Database->execute();
     Row row = Database->fetch();
 
-    //Asigno los valores del registro, a los atributos de tGame.
-    tGame.setId(std::stoi(row["id"]));
-    tGame.setName(row["nombre"]);
+    Game tGame;  // Asegurarse de inicializar tGame
+    tGame.setId(std::stoi(row["ID"]));
+    tGame.setName(row["Name"]);
 
     return tGame;
 }
@@ -167,6 +185,7 @@ Table ClassHandler::ListGames()
 }
 
 Table ClassHandler::JoinQuerys(bool selection) {
+    
     if (selection) {
         query = R"(
             SELECT Customers.Name AS CustomerName, Games.Name AS GameName
