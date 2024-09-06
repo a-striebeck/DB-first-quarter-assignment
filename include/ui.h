@@ -3,19 +3,19 @@
 
 #include <iostream>
 #include <map>
-#include <iomanip>
-#include <ClassHandler.h>
+#include <functional>
+#include <memory>  // Para usar smart pointers
 #include "Customer.h"
 #include "Game.h"
-#include <spanish-UI-Messages.h>
-class ui
-{
+#include "ORMPersister.h"
+#include <iomanip> // Para std::setw
+
+class ui {
 private:
-
     std::map<std::string, std::function<void()>> Operations;
-    ClassHandler *OpManager;
+    std::unique_ptr<ORMPersister> ormPersister;  // Cambiado a unique_ptr para manejar ORM
 
-    
+    // Métodos privados para manejar operaciones
     void AddCustomer();
     void EditCustomer();
     void DeleteCustomer();
@@ -27,11 +27,11 @@ private:
     void ListGames();
     Game SearchGame();
     void printTable(const Table& table);
-
+    void AddOrder();
 
 public:
-    ui(SqliteDatabaseHandler &dbHandler);
-    ~ui();
+    ui(const std::string &db_path);  // Cambiado para inicializar con la ruta de la base de datos
+    ~ui() = default;  // Uso de destructor por defecto, no necesitamos liberar memoria manualmente
     void showMenu();
     void processOperation();
     void showGamesPerCustomer();

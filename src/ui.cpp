@@ -1,10 +1,11 @@
-#include <ui.h>
+#include "ui.h"
+#include "ORMPersister.h"
 
-
-ui::ui(SqliteDatabaseHandler &dbHandler)
-
-{   
-    OpManager = new ClassHandler(dbHandler);
+ui::ui(const std::string &db_path) {
+    // Inicializa el ORM persister con la ruta de la base de datos
+    ormPersister = std::make_unique<ORMPersister>(db_path);
+    
+    // Mapea las operaciones a las funciones correspondientes
     Operations["1"] = [this]() { AddCustomer(); };
     Operations["2"] = [this]() { EditCustomer(); };
     Operations["3"] = [this]() { DeleteCustomer(); };
@@ -19,163 +20,129 @@ ui::ui(SqliteDatabaseHandler &dbHandler)
     Operations["B"] = [this]() { showCustomersPerGame(); };
 }
 
-ui::~ui()
-{
-    delete OpManager;
-}
-
-void ui::AddCustomer()
-{   
-
+void ui::AddCustomer() {
+    Customer tCustomer;
     std::string input;
-    Customer* tCustomer = new Customer();
-    cout << addName;
-    cin >> input;
-    tCustomer->setName(input);
-    cout << addLastName;
-    cin >> input;
-    tCustomer->setLastName(input);
-    cout << addEmail;
-    cin >> input;
-    tCustomer->setEmailAddress(input);
-    OpManager->AddCustomer(*tCustomer);
 
-    delete tCustomer;
-
-}
-void ui::EditCustomer()
-{
-    Customer* tCustomer = new Customer();
+    std::cout << addName;
+    std::cin >> input;
+    tCustomer.setName(input);
     
-    *tCustomer = SearchCustomer();
+    std::cout << addLastName;
+    std::cin >> input;
+    tCustomer.setLastName(input);
+    
+    std::cout << addEmail;
+    std::cin >> input;
+    tCustomer.setEmailAddress(input);
 
+    ormPersister->AddCustomer(tCustomer);  // Usamos el ORM persister
+}
+
+void ui::EditCustomer() {
+    Customer tCustomer = SearchCustomer();
     std::string input;
-    cout << addName;
-    cin >> input;
-    tCustomer->setName(input);
-    cout << addLastName;
-    cin >> input;
-    tCustomer->setLastName(input);
-    cout << addEmail;
-    cin >> input;
-    tCustomer->setEmailAddress(input);
 
-    OpManager->EditCustomer(*tCustomer);
+    std::cout << addName;
+    std::cin >> input;
+    tCustomer.setName(input);
 
-    delete tCustomer;
+    std::cout << addLastName;
+    std::cin >> input;
+    tCustomer.setLastName(input);
 
-}
-void ui::DeleteCustomer()
-{
-    Customer* tCustomer = new Customer();
-    
-    *tCustomer = SearchCustomer();
-    cout << delConfirmation + tCustomer->getName() + " " + tCustomer->getLastName() << "? ";
+    std::cout << addEmail;
+    std::cin >> input;
+    tCustomer.setEmailAddress(input);
 
-    OpManager->DeleteCustomer(*tCustomer);
-    
-    delete tCustomer;
+    ormPersister->EditCustomer(tCustomer);
 }
 
-void ui::ListCustomers()
-{
-    Table customers = OpManager->ListCustomers();
+void ui::DeleteCustomer() {
+    Customer tCustomer = SearchCustomer();
+
+    std::cout << delConfirmation + tCustomer.getName() + " " + tCustomer.getLastName() << "? ";
+    ormPersister->DeleteCustomer(tCustomer);
+}
+
+void ui::ListCustomers() {
+    Table customers = ormPersister->ListCustomers();
     printTable(customers);
 }
 
-Customer ui::SearchCustomer()
-{
-    string value = "";
-    cout << IDmessage;
-    cin >> value;
-    Customer tCustomer = OpManager->SearchCustomer(value);
-
-    return tCustomer;
+Customer ui::SearchCustomer() {
+    std::string value;
+    std::cout << IDmessage;
+    std::cin >> value;
+    return ormPersister->SearchCustomer(value);
 }
 
-void ui::AddGame()
-{
+void ui::AddGame() {
+    Game tGame;
     std::string input;
-    Game* tGame = new Game();
 
-    cout << addGameName;
-    cin >> input;
-    tGame->setName(input);
-    OpManager->AddGame(*tGame);
+    std::cout << addGameName;
+    std::cin >> input;
+    tGame.setName(input);
 
-    delete tGame;
+    ormPersister->AddGame(tGame);
 }
 
-void ui::EditGame()
-{
-    Game* tGame = new Game();
-    
-    *tGame = SearchGame();
-
+void ui::EditGame() {
+    Game tGame = SearchGame();
     std::string input;
-    cout << addGameName;
-    cin >> input;
-    tGame->setName(input);
 
-    OpManager->EditGame(*tGame);
+    std::cout << addGameName;
+    std::cin >> input;
+    tGame.setName(input);
 
-    delete tGame;
+    ormPersister->EditGame(tGame);
 }
 
-void ui::DeleteGame()
-{
-    Game *tGame = new Game();
-    
-    *tGame = SearchGame();
-    cout << delConfirmation + tGame->getName() << "? ";
-    OpManager->DeleteGame(*tGame);
+void ui::DeleteGame() {
+    Game tGame = SearchGame();
+    std::cout << delConfirmation + tGame.getName() << "? ";
+    ormPersister->DeleteGame(tGame);
 }
 
-void ui::ListGames()
-{
-    Table games = OpManager->ListGames();
-    printTable(games);    
+void ui::ListGames() {
+    Table games = ormPersister->ListGames();
+    printTable(games);
 }
 
-
-Game ui::SearchGame()
-
-{
-    string value = "";
-    cout << gameIDmessage;
-    cin >> value;
-    Game tGame = OpManager->SearchGame(value);
-
-    return tGame;
+Game ui::SearchGame() {
+    std::string value;
+    std::cout << gameIDmessage;
+    std::cin >> value;
+    return ormPersister->SearchGame(value);
 }
-void ui::showMenu()
-{
+
+void ui::showMenu() {
     std::cout << menuMessage;
 }
 
-void ui::processOperation()
-{
+void ui::processOperation() {
     std::string op;
     std::cout << operationAsk;
     std::cin >> op;
+
     if (op == "S") {
-            cout << exitMessage;
-        } else if (Operations.find(op) != Operations.end()) {
-            Operations[op]();
-        } else {
-            cout << invalidOption;
-        }
+        std::cout << exitMessage;
+    } else if (Operations.find(op) != Operations.end()) {
+        Operations[op]();
+    } else {
+        std::cout << invalidOption;
+    }
 }
 
-void ui::showGamesPerCustomer()
-{
-    Table JoinQuery = OpManager->JoinQuerys(true);
-    printTable(JoinQuery);
+void ui::showGamesPerCustomer() {
+    Table joinQuery = ormPersister->JoinQueries(true);
+    printTable(joinQuery);
 }
 
-void ui::showCustomersPerGame()
-{
-    Table JoinQuery = OpManager->JoinQuerys(false);
+void ui::showCustomersPerGame() {
+    Table joinQuery = ormPersister->JoinQueries(false);
+    printTable(joinQuery);
 }
 
 void ui::printTable(const Table& table) {
