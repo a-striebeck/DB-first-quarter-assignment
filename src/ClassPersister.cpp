@@ -1,6 +1,6 @@
-#include <classhandler.h>
+#include <ClassPersister.h>
 
-ClassHandler::ClassHandler(SqliteDatabaseHandler &db) : Database(&db)
+ClassPersister::ClassPersister(SqliteDatabaseHandler &db) : Database(&db)
 {
     Database->setConfigFile(".build\\configuration.ini");
 
@@ -25,7 +25,7 @@ ClassHandler::ClassHandler(SqliteDatabaseHandler &db) : Database(&db)
     Database->execute();
 
     query = R"(
-        CREATE TABLE IF NOT EXISTS Purchases (
+        CREATE TABLE IF NOT EXISTS Orders (
             CustomerID INTEGER,
             GameID INTEGER,
             FOREIGN KEY(CustomerID) REFERENCES Customers(ID),
@@ -36,12 +36,12 @@ ClassHandler::ClassHandler(SqliteDatabaseHandler &db) : Database(&db)
     Database->execute();
 
 }
-ClassHandler::~ClassHandler()
+ClassPersister::~ClassPersister()
 {
 }
 
 
-void ClassHandler::AddCustomer(Customer &tCustomer)
+void ClassPersister::AddCustomer(Customer &tCustomer)
 {   
     query = R"(
         INSERT INTO Customers (ID, Name, Lastname, EmailAddress)
@@ -56,7 +56,7 @@ void ClassHandler::AddCustomer(Customer &tCustomer)
 
     Database->execute();
 }
-void ClassHandler::EditCustomer(Customer &tCustomer)
+void ClassPersister::EditCustomer(Customer &tCustomer)
 {
     query = R"(
         INSERT INTO Customers (ID, Name, Lastname, EmailAddress)
@@ -83,7 +83,7 @@ void ClassHandler::EditCustomer(Customer &tCustomer)
     Database->execute();
 
 }
-void ClassHandler::DeleteCustomer(Customer &tCustomer)
+void ClassPersister::DeleteCustomer(Customer &tCustomer)
 {
     query = R"(
         DELETE FROM Customers
@@ -94,7 +94,7 @@ void ClassHandler::DeleteCustomer(Customer &tCustomer)
     Database->addParameter(1, std::to_string(tCustomer.getId()));
     Database->execute();
 }
-Customer ClassHandler::SearchCustomer(string value)
+Customer ClassPersister::SearchCustomer(string value)
 {
     query = R"(
         SELECT ID, Name, LastName, EmailAddress FROM Customers WHERE Name = ?;
@@ -113,7 +113,7 @@ Customer ClassHandler::SearchCustomer(string value)
     
     return tCustomer;
 }
-Table ClassHandler::ListCustomers()
+Table ClassPersister::ListCustomers()
 {
     query = "SELECT * FROM Customers";
     Database->prepareQuery(query);
@@ -121,7 +121,7 @@ Table ClassHandler::ListCustomers()
     return Database->fetchAll();
 }
 
-void ClassHandler::AddGame(Game &tGame)
+void ClassPersister::AddGame(Game &tGame)
 {
     query = R"(
         INSERT INTO Games (ID, Name)
@@ -134,7 +134,7 @@ void ClassHandler::AddGame(Game &tGame)
 
     Database->execute();
 }
-void ClassHandler::EditGame(Game &tGame)
+void ClassPersister::EditGame(Game &tGame)
 {
     query = R"(
         UPDATE Games
@@ -148,7 +148,7 @@ void ClassHandler::EditGame(Game &tGame)
 
     Database->execute();
 }
-void ClassHandler::DeleteGame(Game &tGame)
+void ClassPersister::DeleteGame(Game &tGame)
 {
     query = R"(
         DELETE FROM Games
@@ -159,7 +159,7 @@ void ClassHandler::DeleteGame(Game &tGame)
     Database->addParameter(1, std::to_string(tGame.getId()));
     Database->execute();
 }
-Game ClassHandler::SearchGame(string value)
+Game ClassPersister::SearchGame(string value)
 {
     query = R"(
         SELECT ID, Name FROM Games WHERE Name = ?;
@@ -176,7 +176,7 @@ Game ClassHandler::SearchGame(string value)
 
     return tGame;
 }
-Table ClassHandler::ListGames()
+Table ClassPersister::ListGames()
 {
     query = "SELECT * FROM Games";
     Database->prepareQuery(query);
@@ -184,21 +184,21 @@ Table ClassHandler::ListGames()
     return Database->fetchAll();
 }
 
-Table ClassHandler::JoinQuerys(bool selection) {
+Table ClassPersister::JoinQuerys(bool selection) {
     
     if (selection) {
         query = R"(
             SELECT Customers.Name AS CustomerName, Games.Name AS GameName
             FROM Customers
-            INNER JOIN Purchases ON Customers.ID = Purchases.CustomerID
-            INNER JOIN Games ON Purchases.GameID = Games.ID;
+            INNER JOIN Orders ON Customers.ID = Orders.CustomerID
+            INNER JOIN Games ON Orders.GameID = Games.ID;
         )";
     } else {
         query = R"(
             SELECT Games.Name AS GameName, Customers.Name AS CustomerName
             FROM Games
-            INNER JOIN Purchases ON Games.ID = Purchases.GameID
-            INNER JOIN Customers ON Purchases.CustomerID = Customers.ID;
+            INNER JOIN Orders ON Games.ID = Orders.GameID
+            INNER JOIN Customers ON Orders.CustomerID = Customers.ID;
         )";
     }
 

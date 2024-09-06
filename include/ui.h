@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 #include <iomanip>
-#include <ClassHandler.h>
+#include <ClassPersister.h>
 #include "Customer.h"
 #include "Game.h"
 #include <spanish-UI-Messages.h>
@@ -13,7 +13,7 @@ class ui
 private:
 
     std::map<std::string, std::function<void()>> Operations;
-    ClassHandler *OpManager;
+    ClassPersister *OpManager;
 
     
     void AddCustomer();

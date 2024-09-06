@@ -1,5 +1,5 @@
-#ifndef CLASSHANDLER_H
-#define CLASSHANDLER_H
+#ifndef CLASSPERSISTER_H
+#define CLASSPERSISTER_H
 
 #include <SqliteDatabaseHandler.h>
 #include <Customer.h>
@@ -7,7 +7,7 @@
 
 
 
-class ClassHandler
+class ClassPersister
 {
 private:
 
@@ -30,10 +30,11 @@ public:
     void DeleteGame(Game &tGame);
     Game SearchGame(string value);
     Table ListGames();
+
     
     Table JoinQuerys(bool selection);
 
-    ClassHandler(SqliteDatabaseHandler &db);
-    ~ClassHandler();
+    ClassPersister(SqliteDatabaseHandler &db);
+    ~ClassPersister();
 };
 #endif

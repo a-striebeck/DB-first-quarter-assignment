@@ -46,3 +46,7 @@ void Customer::setEmailAddress(const std::string &address)
 {
     EmailAddress = address;
 }
+
+void Customer::addGame(Game tGame){
+    
+}
