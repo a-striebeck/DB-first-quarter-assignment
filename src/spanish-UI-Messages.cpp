@@ -1,6 +1,9 @@
 #include <spanish-UI-Messages.h>
 
-std::string menuMessage = R"(
+
+namespace spanish
+{
+    std::string menuMessage = R"(
             Gestion de juegos
 
 1.  Ingresar nuevo cliente.
@@ -41,3 +44,5 @@ std::string editGameConfirmation = "Desea modificar el juego: ";
 std::string searchGameMessage = "Datos del juego";
 std::string gameNameMessage = "Nombre del juego: ";
 std::string delGameConfirmation = "Desea eliminar el juego: ";
+
+}

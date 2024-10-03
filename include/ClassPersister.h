@@ -12,8 +12,6 @@ class ClassPersister
 private:
 
     SqliteDatabaseHandler *Database;
-    Customer tCustomer;
-    Game tGame;
     string query;
 
 public:
@@ -31,7 +29,7 @@ public:
     Game SearchGame(string value);
     Table ListGames();
 
-    
+    void AddGameToCustomer(Customer &tCustomer, Game &tGame);    
     Table JoinQuerys(bool selection);
 
     ClassPersister(SqliteDatabaseHandler &db);

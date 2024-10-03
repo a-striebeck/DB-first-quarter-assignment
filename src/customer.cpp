@@ -48,5 +48,5 @@ void Customer::setEmailAddress(const std::string &address)
 }
 
 void Customer::addGame(Game tGame){
-    
+    Games.push_back(tGame);
 }

@@ -1,10 +1,10 @@
 #include <ui.h>
 
 
-ui::ui(SqliteDatabaseHandler &dbHandler)
+ui::ui(ClassPersister &DB)
 
 {   
-    OpManager = new ClassHandler(dbHandler);
+    OpManager = &DB;
     Operations["1"] = [this]() { AddCustomer(); };
     Operations["2"] = [this]() { EditCustomer(); };
     Operations["3"] = [this]() { DeleteCustomer(); };
@@ -29,13 +29,13 @@ void ui::AddCustomer()
 
     std::string input;
     Customer* tCustomer = new Customer();
-    cout << addName;
+    cout << spanish::addName;
     cin >> input;
     tCustomer->setName(input);
-    cout << addLastName;
+    cout << spanish::addLastName;
     cin >> input;
     tCustomer->setLastName(input);
-    cout << addEmail;
+    cout << spanish::addEmail;
     cin >> input;
     tCustomer->setEmailAddress(input);
     OpManager->AddCustomer(*tCustomer);
@@ -50,13 +50,13 @@ void ui::EditCustomer()
     *tCustomer = SearchCustomer();
 
     std::string input;
-    cout << addName;
+    cout << spanish::addName;
     cin >> input;
     tCustomer->setName(input);
-    cout << addLastName;
+    cout << spanish::addLastName;
     cin >> input;
     tCustomer->setLastName(input);
-    cout << addEmail;
+    cout << spanish::addEmail;
     cin >> input;
     tCustomer->setEmailAddress(input);
 
@@ -70,7 +70,7 @@ void ui::DeleteCustomer()
     Customer* tCustomer = new Customer();
     
     *tCustomer = SearchCustomer();
-    cout << delConfirmation + tCustomer->getName() + " " + tCustomer->getLastName() << "? ";
+    cout << spanish::delConfirmation + tCustomer->getName() + " " + tCustomer->getLastName() << "? ";
 
     OpManager->DeleteCustomer(*tCustomer);
     
@@ -86,7 +86,7 @@ void ui::ListCustomers()
 Customer ui::SearchCustomer()
 {
     string value = "";
-    cout << IDmessage;
+    cout << spanish::IDmessage;
     cin >> value;
     Customer tCustomer = OpManager->SearchCustomer(value);
 
@@ -98,7 +98,7 @@ void ui::AddGame()
     std::string input;
     Game* tGame = new Game();
 
-    cout << addGameName;
+    cout << spanish::addGameName;
     cin >> input;
     tGame->setName(input);
     OpManager->AddGame(*tGame);
@@ -113,7 +113,7 @@ void ui::EditGame()
     *tGame = SearchGame();
 
     std::string input;
-    cout << addGameName;
+    cout << spanish::addGameName;
     cin >> input;
     tGame->setName(input);
 
@@ -127,7 +127,7 @@ void ui::DeleteGame()
     Game *tGame = new Game();
     
     *tGame = SearchGame();
-    cout << delConfirmation + tGame->getName() << "? ";
+    cout << spanish::delConfirmation + tGame->getName() << "? ";
     OpManager->DeleteGame(*tGame);
 }
 
@@ -142,7 +142,7 @@ Game ui::SearchGame()
 
 {
     string value = "";
-    cout << gameIDmessage;
+    cout << spanish::gameIDmessage;
     cin >> value;
     Game tGame = OpManager->SearchGame(value);
 
@@ -150,13 +150,13 @@ Game ui::SearchGame()
 }
 void ui::showMenu()
 {
-    std::cout << menuMessage;
+    std::cout << spanish::menuMessage;
 }
 
 void ui::processOperation()
 {
     std::string op;
-    std::cout << operationAsk;
+    std::cout << spanish::operationAsk;
     std::cin >> op;
     if (op == "S") {
             cout << exitMessage;

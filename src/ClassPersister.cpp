@@ -2,8 +2,6 @@
 
 ClassPersister::ClassPersister(SqliteDatabaseHandler &db) : Database(&db)
 {
-    Database->setConfigFile(".build\\configuration.ini");
-
     query = R"(
         CREATE TABLE IF NOT EXISTS Customers (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +23,7 @@ ClassPersister::ClassPersister(SqliteDatabaseHandler &db) : Database(&db)
     Database->execute();
 
     query = R"(
-        CREATE TABLE IF NOT EXISTS Orders (
+        CREATE TABLE IF NOT EXISTS Purchases (
             CustomerID INTEGER,
             GameID INTEGER,
             FOREIGN KEY(CustomerID) REFERENCES Customers(ID),
@@ -94,6 +92,20 @@ void ClassPersister::DeleteCustomer(Customer &tCustomer)
     Database->addParameter(1, std::to_string(tCustomer.getId()));
     Database->execute();
 }
+
+void ClassPersister::AddGameToCustomer(Customer &tCustomer, Game &tGame){
+    query = R"(
+        INSERT INTO Purchases (CustomerID, GameID)
+        VALUES (?, ?);
+    )";
+
+    Database->prepareQuery(query);
+    Database->addParameter(1, std::to_string(tCustomer.getId()));
+    Database->addParameter(2, std::to_string(tGame.getId()));
+
+    Database->execute();
+}
+
 Customer ClassPersister::SearchCustomer(string value)
 {
     query = R"(

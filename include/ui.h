@@ -3,19 +3,19 @@
 
 #include <iostream>
 #include <map>
-#include <iomanip>
+#include <functional>
 #include <ClassPersister.h>
 #include "Customer.h"
 #include "Game.h"
-#include <spanish-UI-Messages.h>
-class ui
-{
-private:
+#include "spanish-UI-Messages.h"
+#include <iomanip> // Para std::setw
 
+using namespace spanish;
+class ui {
+private:
     std::map<std::string, std::function<void()>> Operations;
     ClassPersister *OpManager;
 
-    
     void AddCustomer();
     void EditCustomer();
     void DeleteCustomer();
@@ -28,9 +28,8 @@ private:
     Game SearchGame();
     void printTable(const Table& table);
 
-
 public:
-    ui(SqliteDatabaseHandler &dbHandler);
+    ui(ClassPersister &DB);  
     ~ui();
     void showMenu();
     void processOperation();

@@ -3,6 +3,8 @@
 
 #include <string>
 
+
+namespace spanish{
 extern std::string menuMessage;
 extern std::string operationAsk;
 extern std::string exitMessage;
@@ -25,5 +27,5 @@ extern std::string editGameConfirmation;
 extern std::string searchGameMessage;
 extern std::string gameNameMessage;
 extern std::string delGameConfirmation;
-
+}
 #endif // SPANISH_UI_MESSAGES_H
